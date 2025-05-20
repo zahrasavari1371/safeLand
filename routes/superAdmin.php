@@ -27,6 +27,7 @@ Route::prefix('super-admin')->middleware(['web','role:super admin'])->name('supe
     Route::post('/delete-unit/{id}', [CompanyController::class, 'deleteCompanyUnit'])->name('companies.unit.delete');
     Route::post('/add-units', [CompanyController::class, 'addUnits'])->name('companies.units.add');
     Route::get('/get-information/{id}', [CompanyController::class, 'getCompanyInfo'])->name('companies.get-information');
+    Route::get('/get-cities/{state_id}', [CompanyController::class, 'getCities'])->name('get-cities');
 
     Route::get('/users-list/{type}', [UserController::class, 'usersList'])->name('users.list');
     Route::get('/create-user/{type}', [UserController::class, 'createUser'])->name('users.create');

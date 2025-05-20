@@ -36,11 +36,18 @@
                                     <table id="data-table"
                                            class="table-default table-hover data-table">
                                         <thead>
-                                        <tr>
-                                            <td>شماره شرکت</td>
-                                            <th>نام</th>
-                                            <th>لوگو</th>
-                                            <th>تاریخ ثبت</th>
+                                        <tr class="whitespace-nowrap">
+                                            <td>{{__("number")}} {{__("company")}}</td>
+                                            <th>{{__("name")}}</th>
+                                            <th>{{__("National Id")}}</th>
+                                            <th>{{__("Economic Code")}}</th>
+                                            <th>{{__("Registration Number")}}</th>
+                                            <th>{{__("Office Phone")}}</th>
+                                            <th>{{__("Fax")}}</th>
+                                            <th>{{__("state")}}</th>
+                                            <th>{{__("zipcode")}}</th>
+                                            <th>{{__("logo")}}</th>
+                                            <th>{{__("created at")}}</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -48,7 +55,7 @@
                                         @if(count($companies)>0)
                                             @foreach($companies as $company)
 
-                                                <tr>
+                                                <tr class="whitespace-nowrap">
                                                     <td>{{$company->id}}</td>
                                                     <td>
                                                         <div class="flex items-center">
@@ -56,6 +63,13 @@
                                                                href="#?id=1">{{$company->name}}</a>
                                                         </div>
                                                     </td>
+                                                    <td>{{$company->national_id}}</td>
+                                                    <td>{{$company->economic_code}}</td>
+                                                    <td>{{$company->registration_number}}</td>
+                                                    <td>{{$company->office_phone}}</td>
+                                                    <td>{{$company->fax??"-"}}</td>
+                                                    <td>{{$company->city?$company->city->state->name:"-"}}</td>
+                                                    <td>{{$company->zipcode}}</td>
                                                     <td>
                                                         @if($company->logo)
                                                             <img class="avatar-img rounded-full w-[50px]"
@@ -138,7 +152,7 @@
                         error: function (xhr) {
                             toastr.error('با پوزش! مشکلی در سرور به وجود آمده است. لطفاً بعداً دوباره امتحان کنید.')
                             setTimeout(function () {
-                                location.reload();
+                                // location.reload();
                             }, 1500)
                         }
                     });

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Comment;
 use App\Models\Company;
 use App\Models\CompanyUnit;
 use App\Models\File;
 use App\Models\InspectionRequest;
+use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,23 +20,31 @@ class CompanyController extends Controller
 {
     public function companiesList(): View
     {
-        $companies = Company::query()->orderBy('created_at', 'desc')->get();
+        $companies = Company::query()->orderBy('created_at', 'desc')->with('city')->get();
         return view('superAdmin.companies.list', compact('companies'));
     }
 
     public function createCompany(): View
     {
-        return view('superAdmin.companies.create');
+        $states = State::all();
+        $cities = City::query()->where('state_id', 1)->get();
+        return view('superAdmin.companies.create', compact('states','cities'));
     }
 
     public function storeCompany(Request $request): \Illuminate\Http\JsonResponse
     {
-//        https://safetrack.karmad.ir/assets/img/company-logo/1741759186-Picture1.png
         try {
             $validation = Validator::make($request->all(), [
                 'name' => 'required|string',
+                'national_id' => 'required|regex:/^[1-9][0-9]{10}$/',
+                'economic_code' => 'required|regex:/^\d{12}$/',
+                'registration_number' => 'required|regex:/^\d{4,10}$/',
+                'office_phone' => 'required',
+                'zipcode' => 'required|regex:/^\d{10}$/',
+                'address' => 'required|string',
+                'city_id' => 'required',
                 'logo' => 'required|mimes:jpg,jpeg,png,webp|max:5120',
-            ], messages: ['mimes:فرمت لوگو باید png,jpg و یا jpeg باشد','max'=>'سایز عکس باید کمتر از 5 مگابایت باشد.']);
+            ], messages: ['mimes:فرمت لوگو باید png,jpg و یا jpeg باشد', 'max' => 'سایز عکس باید کمتر از 5 مگابایت باشد.']);
 
             if ($validation->fails())
                 return response()->json(['status' => 422, 'errors' => $validation->errors()]);
@@ -48,8 +58,16 @@ class CompanyController extends Controller
                 }
                 $logo->move($destinationPath, $filename);
             }
+
             $company = Company::query()->create([
                 'name' => $request->name,
+                'national_id' => $request->national_id,
+                'economic_code' => $request->economic_code,
+                'registration_number' => $request->registration_number,
+                'office_phone' => $request->office_phone,
+                'zipcode' => $request->zipcode,
+                'address' => $request->address,
+                'city_id' => $request->city_id,
                 'logo' => $filename
             ]);
 
@@ -70,7 +88,9 @@ class CompanyController extends Controller
     public function editCompany($id): View
     {
         $company = Company::query()->findOrFail($id)->withoutRelations();
-        return view('superAdmin.companies.edit', compact('company'));
+        $states = State::all();
+        $cities = City::query()->where('id', $company->city_id)->get();
+        return view('superAdmin.companies.edit', compact('company','states','cities'));
     }
 
     public function deleteCompany($id): \Illuminate\Http\JsonResponse
@@ -99,7 +119,7 @@ class CompanyController extends Controller
                 }
 
                 // حذف کاربران (کارمندان) شرکت
-                User::query()->where('company_id', $company->id)->orWhereIn('company_unit_id',[$units])->delete();
+                User::query()->where('company_id', $company->id)->orWhereIn('company_unit_id', $units)->delete();
             }
             // حذف واحدهای مرتبط با شرکت
             CompanyUnit::query()->where('company_id', $company->id)->delete();
@@ -120,6 +140,20 @@ class CompanyController extends Controller
         try {
             switch ($request->type) {
                 case 'company':
+                    $validation = Validator::make($request->all(), [
+                        'name' => 'required|string',
+                        'national_id' => 'required|regex:/^[1-9][0-9]{10}$/',
+                        'economic_code' => 'required|regex:/^\d{12}$/',
+                        'registration_number' => 'required|regex:/^\d{4,10}$/',
+                        'office_phone' => 'required',
+                        'zipcode' => 'required|regex:/^\d{10}$/',
+                        'address' => 'required|string',
+                        'city_id' => 'required',
+                    ]);
+
+                    if ($validation->fails())
+                        return response()->json(['status' => 422, 'errors' => $validation->errors()]);
+
                     $company = Company::query()->findOrFail($id);
                     $filename = null;
                     if ($request->hasFile('logo')) {
@@ -130,10 +164,19 @@ class CompanyController extends Controller
                             mkdir($destinationPath, 0777, true);
                         }
                         $logo->move($destinationPath, $filename);
-                    }
+                    }else
+                        $filename=$company->logo;
+
                     company::query()->where('id', $id)->update([
                         'name' => $request->name,
-                        'logo' => $filename ?? $company->logo
+                        'national_id' => $request->national_id,
+                        'economic_code' => $request->economic_code,
+                        'registration_number' => $request->registration_number,
+                        'office_phone' => $request->office_phone,
+                        'zipcode' => $request->zipcode,
+                        'address' => $request->address,
+                        'city_id' => $request->city_id,
+                        'logo' => $filename
                     ]);
                     return response()->json(['status' => 200, 'message' => 'َاطلاعات شرکت با موفقیت به‌روزرسانی شد.', 'reload' => true]);
                 case 'units':
@@ -202,14 +245,24 @@ class CompanyController extends Controller
         }
     }
 
+    public function getCities(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $cities = City::query()->where('state_id', $request['state_id'])->get();
+            return response()->json(['cities' => $cities]);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => 500, 'message' => 'خطایی در سرور رخ داده است. لطفاً مشکل را به پشتیبانی اطلاع دهید و در زمانی دیگر تلاش کنید.']);
+        }
+    }
+
     public function search(Request $request)
     {
         try {
             $query = $request->input('query');
-            $companies = Company::query()->where('name', 'LIKE', "%{$query}%")->select('name','logo')->get();
+            $companies = Company::query()->where('name', 'LIKE', "%{$query}%")->select('name', 'logo')->get();
 
             return response()->json($companies);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['status' => 500, 'message' => 'خطایی در سرور رخ داده است. لطفاً مشکل را به پشتیبانی اطلاع دهید و در زمانی دیگر تلاش کنید.']);
         }
     }

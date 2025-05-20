@@ -24,22 +24,134 @@
                         <div
                             class="card adaptable-card !border-b pb-6 py-4 rounded-br-none rounded-bl-none">
                             <div class="card-body">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div class="col-span-1">
                                         <div class="form-item vertical">
-                                            <label class="form-label mb-2">{{__('company name')}}</label>
+                                            <label class="form-label mb-2">{{__('company name')}}*</label>
                                             <div>
                                                 <input class="input" type="text" name="name" id="name"
                                                        autocomplete="off"
                                                        placeholder="نام شرکت">
                                                 <span class="error error-name text-red-600 text-right"></span>
-                                                <div id="company-list" class="w-full rounded-md border bg-white"></div>
+                                                <div id="company-list" class="w-full rounded-md border bg-white hidden"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-span-1">
                                         <div class="form-item vertical">
-                                            <label class="form-label mb-2">{{__('logo')}} <small class="text-rose-600 text-xs mr-2">{{__('(The logo image format must be PNG, JPG, JPEG, or WEBP, and the file size should not exceed 5 MB.)')}}</small></label>
+                                            <label class="form-label mb-2">{{__('National Id')}}*</label>
+                                            <div>
+                                                <input class="input" type="text" name="national_id" id="national_id"
+                                                       autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                       placeholder="{{__("National Id")}}">
+                                                <span class="error error-national_id text-red-600 text-right"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('Economic Code')}}*</label>
+                                            <div>
+                                                <input class="input" type="text" name="economic_code" id="economic_code"
+                                                       autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                       placeholder="{{__("Economic Code")}}">
+                                                <span class="error error-economic_code text-red-600 text-right"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('Registration Number')}}*</label>
+                                            <div>
+                                                <input class="input" type="text" name="registration_number" id="registration_number"
+                                                       autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                       placeholder="{{__("Registration Number")}}">
+                                                <span class="error error-registration_number text-red-600 text-right"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('Fax')}}</label>
+                                            <div>
+                                                <input class="input" type="text" name="fax" id="fax"
+                                                       autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                       placeholder="{{__("Fax")}}">
+                                                <span class="error error-fax text-red-600 text-right"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('Office Phone')}}*</label>
+                                            <div>
+                                                <input class="input" type="text" name="office_phone" id="office_phone"
+                                                       autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                       placeholder="{{__("Office Phone")}}">
+                                                <span class="error error-office_phone text-red-600 text-right"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('state')}}*</label>
+                                            <div>
+                                                <select class="input" name="state_id" id="state_id">
+                                                    @foreach($states as $state)
+                                                        <option value="{{$state->id}}">{{$state->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('city')}}*</label>
+                                            <div>
+                                                <select class="input" name="city_id" id="city_id">
+                                                    @foreach($cities as $city)
+                                                        <option value="{{$city->id}}">{{$city->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('address')}}*</label>
+                                            <div>
+                                                <input class="input" type="text" name="address" id="address"
+                                                       autocomplete="off"
+                                                       placeholder="{{__("address")}}">
+                                                <span class="error error-address text-red-600 text-right"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="col-span-1">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('zipcode')}}*</label>
+                                            <div>
+                                                <input class="input" type="text" name="zipcode" id="zipcode"
+                                                       autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                       placeholder="{{__("zipcode")}}">
+                                                <span class="error error-zipcode text-red-600 text-right"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <div class="form-item vertical">
+                                            <label class="form-label mb-2">{{__('logo')}}*<small class="text-rose-600 text-xs mr-2">{{__('(The logo image format must be PNG, JPG, JPEG, or WEBP, and the file size should not exceed 5 MB.)')}}</small></label>
                                             <div>
                                                 <input class="input pl-8" type="file" name="logo" id="logo"
                                                        autocomplete="off" accept=".png, .jpg, .jpeg"
@@ -115,6 +227,26 @@
 
 @section('scripts')
     <script>
+        $('#state_id').on('change', function () {
+            let stateId = $(this).find(":selected").val()
+            $.ajax({
+                url: `{{ url('super-admin/get-cities')}}/${stateId}`,
+                type: 'get',
+                processData: false, // Disable processData for FormData
+                contentType: false,
+                success: function (response) {
+                    cities = response.cities
+                    $('#city_id').empty()
+                    cities.forEach(city => {
+                        $('#city_id').append(`<option value="${city.id}">${city.name}</option>`)
+                    })
+                },
+                error: function (xhr) {
+                    toastr.error('با پوزش! مشکلی در سرور به وجود آمده است. لطفاً بعداً دوباره امتحان نمایید.')
+                }
+            });
+        })
+
         $('.add_unit').click(function () {
             $('#units-area').append(`<div class="form-container inline">
                                     <div class="form-item inline">
@@ -156,6 +288,7 @@
                         type: "GET",
                         data: { query: query },
                         success: function (data) {
+                            $("#company-list").removeClass('hidden')
                             let list = $("#company-list");
                             list.empty();
                             if (data.length > 0) {

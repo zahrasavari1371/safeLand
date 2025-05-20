@@ -104,5 +104,17 @@
     "user status": "وضعیت کاربر",
     "active": "فعال",
     "inactive": "غیرفعال",
-    "Please switch your keyboard to Persian.": "لطفا زبان کیبورد را به فارسی تغییر دهید."
+    "Please switch your keyboard to Persian.": "لطفا زبان کیبورد را به فارسی تغییر دهید.",
+    "National Id": "شناسه ملی",
+    "Economic Code": "کد اقتصادی",
+    "Registration Number": "شماره ثبت",
+    "Fax": "نمابر",
+    "Office Phone": "شماره تماس",
+    "zipcode": "کدپستی",
+    "address": "آدرس",
+    "city": "شهر",
+    "state": "استان",
+    "number": "شماره",
+    "company": "شرکت",
+    "created at": "تاریخ ثبت"
 }

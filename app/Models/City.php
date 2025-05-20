@@ -17,4 +17,9 @@ class City extends Model
     {
         return $this->belongsToMany(InspectionRequest::class);
     }
+
+    public function companies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Company::class);
+    }
 }

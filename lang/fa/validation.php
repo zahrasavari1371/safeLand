@@ -199,6 +199,14 @@ return [
         'coordinator_mobile' => 'موبایل هماهنگ کننده',
         'company_id' => 'نام شرکت',
         'company_unit' => 'نام بخش',
+        'national_id' => 'شناسه ملی',
+        'economic_code' => 'کد اقتصادی',
+        'registration_number' => 'شماره ثبت',
+        'office_phone' => 'شماره تماس',
+        'zipcode' => 'کدپستی',
+        'address' => 'آدرس',
+        'state' => 'استان',
+        'city_id' => 'شهر',
     ],
 
 ];
